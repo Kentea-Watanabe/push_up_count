@@ -5,6 +5,7 @@ import math
 
 import cv2
 import mediapipe as mp
+from playsound import playsound
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
@@ -96,6 +97,8 @@ with mp_pose.Pose(
             if frame > max_inference:
               if distance < 0.15:
                 push_up_cnt += 1
+                if push_up_cnt % 3 ==0:
+                  playsound("sound\sample_sound.mp3")
                 # frame数の初期化
                 frame = 0
                 print('push up success', f'cnt : {push_up_cnt}')
