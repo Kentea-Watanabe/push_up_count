@@ -1,10 +1,10 @@
 # 参考
 # https://google.github.io/mediapipe/solutions/pose
 
-import cv2
-import mediapipe as mp
 import math
 
+import cv2
+import mediapipe as mp
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
@@ -53,13 +53,17 @@ with mp_pose.Pose(
         results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
 
 # For webcam input:
-cap = cv2.VideoCapture(0)
+# cap = cv2.VideoCapture(0)
+# cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture("sample_video\pushup_sample.mp4")
 fps = cap.get(cv2.CAP_PROP_FPS)
 # 3秒間に1度だけカウントするように定義する。
 max_inference = fps * 3
 
 push_up_cnt = 0
 frame = 0
+# 画像保存用
+count = 0
 with mp_pose.Pose(
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5) as pose:
@@ -80,9 +84,9 @@ with mp_pose.Pose(
     # 判定する基準の設定
     if results.pose_landmarks:
       for idx, landmark in enumerate(results.pose_landmarks.landmark):
-        if idx == 11:  # 左肩
+        if idx == 12: # 11:  # 左肩
             left_shoulder = landmark
-        if idx == 19:  # 左手
+        if idx == 20: # 19:  # 左手
             left_index = landmark
             # 2点間の距離を求める
             distance = math.sqrt((left_shoulder.x - left_index.x)**2 + (left_shoulder.y - left_index.y)**2)
@@ -107,7 +111,20 @@ with mp_pose.Pose(
         mp_pose.POSE_CONNECTIONS,
         landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
     # Flip the image horizontally for a selfie-view display.
-    cv2.imshow('pushup_count', cv2.flip(image, 1))    
-    if cv2.waitKey(5) & 0xFF == 27:
+    # cv2.imshow('pushup_count', cv2.flip(image, 1))
+    cv2.putText(image,
+            text='pushup count : ' + str(push_up_cnt),
+            org=(10, 40),
+            fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+            fontScale=1.0,
+            color=(0, 255, 0),
+            thickness=3,
+            lineType=cv2.LINE_4)
+    cv2.imshow('pushup_count', image)
+    # 画像保存
+    # cv2.imwrite(f"./result/{str(count).zfill(3)}_frame.jpg", image)
+    # count += 1
+    if cv2.waitKey(1) & 0xFF == ord('q'):
       break
 cap.release()
+cv2.destroyAllWindows()
