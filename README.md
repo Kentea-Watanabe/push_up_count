@@ -13,5 +13,5 @@ python3 -m pip install -r requirements.txt
 
 # Demo 
 ```
-python pushup_app.py
+python src\pushup_app.py
 ```
