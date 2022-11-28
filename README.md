@@ -1,12 +1,14 @@
 # push_up_count
 腕立て伏せを応援してくれるアプリ
 
-# Install
+# ライブラリー
+- opencv-python
+- mediapipe
+- playsound
 
+# Install
 ```
-pip install opencv-python
-pip install mediapipe
-pip install playsound
+python3 -m pip install -r requirements.txt
 ```
 
 # Demo 
